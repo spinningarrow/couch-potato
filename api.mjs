@@ -1,8 +1,8 @@
 export const search = async (query) => {
-  const searchUrl = 'https://api.tvmaze.com/search/shows?q='
-  const response = await fetch(`${searchUrl}${encodeURIComponent(query)}`)
-  const data = await response.json()
-  return data.map(({show}) => show)
+  const searchUrl = "https://api.tvmaze.com/search/shows?q=";
+  const response = await fetch(`${searchUrl}${encodeURIComponent(query)}`);
+  const data = await response.json();
+  return data.map(({ show }) => show);
 };
 
 export const getSeasons = async (showId) => {

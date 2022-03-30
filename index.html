@@ -1,10 +1,4 @@
 <title>TV List</title>
-<form onsubmit="handleSearchSubmitted(event)">
-  <input id="search" type="search" />
-  <button type="submit">Search</button>
-</form>
-
-<div id="results"></div>
 
 <div id="react-app"></div>
 
@@ -22,25 +16,6 @@
 
   const e = React.createElement;
 
-  class LikeButton extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = { liked: false };
-    }
-
-    render() {
-      if (this.state.liked) {
-        return "You liked this.";
-      }
-
-      return e(
-        "button",
-        { onClick: () => this.setState({ liked: true }) },
-        "Like"
-      );
-    }
-  }
-
   const SearchForm = ({ handleSearch }) => {
     return e(
       "form",
@@ -50,23 +25,32 @@
     );
   };
 
-  const SearchResult = ({ id, image } ) => {
-    return e("span", { }, e('img', {
-    src: image?.medium || image?.original || 'https://via.placeholder.com/200x300',
-    title: id
-    }));
+  const SearchResult = ({ id, image }) => {
+    return e(
+      "span",
+      {},
+      e("img", {
+        src:
+          image?.medium ||
+          image?.original ||
+          "https://via.placeholder.com/200x300",
+        title: id,
+      })
+    );
   };
 
-  const SearchResults = ({results}) => {
+  const SearchResults = ({ results }) => {
     return e(
       "div",
       {},
-      (results || []).map(result => e(SearchResult, { key: result.id, ...result }))
+      (results || []).map((result) =>
+        e(SearchResult, { key: result.id, ...result })
+      )
     );
   };
 
   const App = (props) => {
-    const [results, setResults] = React.useState([])
+    const [results, setResults] = React.useState([]);
 
     return e(
       "div",
@@ -78,46 +62,17 @@
           console.log("query was", query);
 
           const results = await api.search(query);
-          console.log('search results', results)
-          setResults(results)
+          console.log("search results", results);
+          setResults(results);
 
           return false;
         },
       }),
-      e(SearchResults, { results }),
-      e(LikeButton)
+      e(SearchResults, { results })
     );
   };
 
   const domContainer = document.querySelector("#react-app");
   const root = ReactDOM.createRoot(domContainer);
   root.render(e(App));
-</script>
-
-<script>
-  const SEARCH_API_URL = "https://api.tvmaze.com/search/shows?q=";
-  const handleSearchSubmitted = async (event) => {
-    event.preventDefault();
-
-    const query = event.target.elements.namedItem("search").value;
-    console.log(query);
-
-    const response = await fetch(
-      `${SEARCH_API_URL}${encodeURIComponent(query)}`
-    );
-    const json = await response.json();
-    console.log(json);
-
-    const imageUrls = json.map(
-      (result) =>
-        result.show.image?.medium ||
-        result.show.image?.original ||
-        "https://via.placeholder.com/200x300"
-    );
-
-    const html = imageUrls.map((url) => `<img src="${url}">`).join("\n");
-    document.querySelector("#results").innerHTML = html;
-
-    return false;
-  };
 </script>
