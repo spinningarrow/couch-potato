@@ -17,8 +17,8 @@
   crossorigin
 ></script>
 
-<script>
-  "use strict";
+<script type="module">
+  import * as api from "./api.mjs";
 
   const e = React.createElement;
 
@@ -41,28 +41,54 @@
     }
   }
 
+  const SearchForm = ({ handleSearch }) => {
+    return e(
+      "form",
+      { onSubmit: handleSearch },
+      e("input", { type: "search" }),
+      e("button", { type: "submit" }, "Search")
+    );
+  };
+
+  const SearchResult = ({ showId, imageUrl }) => {
+    return e("div", {}, e("img", { src: imageUrl, title: showId }));
+  };
+
   const SearchResults = (props) => {
     return e(
       "div",
       { onClick: () => console.log("props were", props) },
-      "Here be props"
+      "Here be props",
+      e(SearchResult, {
+        showId: "123",
+        imageUrl: "https://via.placeholder.com/200x300",
+      })
     );
   };
 
   const App = (props) => {
-    return e("div", {}, e(SearchResults, { something: "else" }), e(LikeButton));
+    return e(
+      "div",
+      {},
+      e(SearchForm, {
+        handleSearch: (event) => {
+          event.preventDefault();
+          const query = event.target.elements[0].value;
+          console.log("query was", query);
+
+          api.search(query);
+
+          return false;
+        },
+      }),
+      e(SearchResults, { something: "else" }),
+      e(LikeButton)
+    );
   };
 
   const domContainer = document.querySelector("#react-app");
   const root = ReactDOM.createRoot(domContainer);
   root.render(e(App));
-</script>
-
-<script type="module">
-  import * as api from "./api.mjs";
-
-  console.log("api is", api);
-  window.api = api;
 </script>
 
 <script>

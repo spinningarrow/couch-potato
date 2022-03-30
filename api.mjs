@@ -1,4 +1,6 @@
-export const search = async (query) => [];
+export const search = async (query) => {
+  console.log("gonna search with query", query);
+};
 
 export const getSeasons = async (showId) => {
   console.log("getting seasons for show", showId);
