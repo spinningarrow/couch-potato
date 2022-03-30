@@ -1,28 +1,94 @@
 <title>TV List</title>
 <form onsubmit="handleSearchSubmitted(event)">
-<input id="search" type="search">
-<button type="submit">Search</button>
+  <input id="search" type="search" />
+  <button type="submit">Search</button>
 </form>
 
 <div id="results"></div>
 
+<div id="react-app"></div>
+
+<script
+  src="https://unpkg.com/react@18/umd/react.development.js"
+  crossorigin
+></script>
+<script
+  src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+  crossorigin
+></script>
+
 <script>
-const SEARCH_API_URL = 'https://api.tvmaze.com/search/shows?q='
-const handleSearchSubmitted = async event => {
-	event.preventDefault()
+  "use strict";
 
-	const query = event.target.elements.namedItem('search').value
-	console.log(query)
+  const e = React.createElement;
 
-	const response = await fetch(`${SEARCH_API_URL}${encodeURIComponent(query)}`)
-	const json = await response.json()
-	console.log(json)
+  class LikeButton extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { liked: false };
+    }
 
-	const imageUrls = json.map(result => result.show.image?.medium || result.show.image?.original || 'https://via.placeholder.com/200x300')
+    render() {
+      if (this.state.liked) {
+        return "You liked this.";
+      }
 
-	const html = imageUrls.map(url => `<img src="${url}">`).join('\n')
-	document.querySelector('#results').innerHTML = html
+      return e(
+        "button",
+        { onClick: () => this.setState({ liked: true }) },
+        "Like"
+      );
+    }
+  }
 
-	return false
-}
+  const SearchResults = (props) => {
+    return e(
+      "div",
+      { onClick: () => console.log("props were", props) },
+      "Here be props"
+    );
+  };
+
+  const App = (props) => {
+    return e("div", {}, e(SearchResults, { something: "else" }), e(LikeButton));
+  };
+
+  const domContainer = document.querySelector("#react-app");
+  const root = ReactDOM.createRoot(domContainer);
+  root.render(e(App));
+</script>
+
+<script type="module">
+  import * as api from "./api.mjs";
+
+  console.log("api is", api);
+  window.api = api;
+</script>
+
+<script>
+  const SEARCH_API_URL = "https://api.tvmaze.com/search/shows?q=";
+  const handleSearchSubmitted = async (event) => {
+    event.preventDefault();
+
+    const query = event.target.elements.namedItem("search").value;
+    console.log(query);
+
+    const response = await fetch(
+      `${SEARCH_API_URL}${encodeURIComponent(query)}`
+    );
+    const json = await response.json();
+    console.log(json);
+
+    const imageUrls = json.map(
+      (result) =>
+        result.show.image?.medium ||
+        result.show.image?.original ||
+        "https://via.placeholder.com/200x300"
+    );
+
+    const html = imageUrls.map((url) => `<img src="${url}">`).join("\n");
+    document.querySelector("#results").innerHTML = html;
+
+    return false;
+  };
 </script>
