@@ -50,38 +50,41 @@
     );
   };
 
-  const SearchResult = ({ showId, imageUrl }) => {
-    return e("div", {}, e("img", { src: imageUrl, title: showId }));
+  const SearchResult = ({ id, image } ) => {
+    return e("span", { }, e('img', {
+    src: image?.medium || image?.original || 'https://via.placeholder.com/200x300',
+    title: id
+    }));
   };
 
-  const SearchResults = (props) => {
+  const SearchResults = ({results}) => {
     return e(
       "div",
-      { onClick: () => console.log("props were", props) },
-      "Here be props",
-      e(SearchResult, {
-        showId: "123",
-        imageUrl: "https://via.placeholder.com/200x300",
-      })
+      {},
+      (results || []).map(result => e(SearchResult, { key: result.id, ...result }))
     );
   };
 
   const App = (props) => {
+    const [results, setResults] = React.useState([])
+
     return e(
       "div",
       {},
       e(SearchForm, {
-        handleSearch: (event) => {
+        handleSearch: async (event) => {
           event.preventDefault();
           const query = event.target.elements[0].value;
           console.log("query was", query);
 
-          api.search(query);
+          const results = await api.search(query);
+          console.log('search results', results)
+          setResults(results)
 
           return false;
         },
       }),
-      e(SearchResults, { something: "else" }),
+      e(SearchResults, { results }),
       e(LikeButton)
     );
   };
