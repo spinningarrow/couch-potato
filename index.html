@@ -1,0 +1,28 @@
+<title>TV List</title>
+<form onsubmit="handleSearchSubmitted(event)">
+<input id="search" type="search">
+<button type="submit">Search</button>
+</form>
+
+<div id="results"></div>
+
+<script>
+const SEARCH_API_URL = 'https://api.tvmaze.com/search/shows?q='
+const handleSearchSubmitted = async event => {
+	event.preventDefault()
+
+	const query = event.target.elements.namedItem('search').value
+	console.log(query)
+
+	const response = await fetch(`${SEARCH_API_URL}${encodeURIComponent(query)}`)
+	const json = await response.json()
+	console.log(json)
+
+	const imageUrls = json.map(result => result.show.image?.medium || result.show.image?.original || 'https://via.placeholder.com/200x300')
+
+	const html = imageUrls.map(url => `<img src="${url}">`).join('\n')
+	document.querySelector('#results').innerHTML = html
+
+	return false
+}
+</script>
