@@ -1,4 +1,22 @@
 <title>TV List</title>
+<style>
+  img {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 0.2rem;
+    width: 3rem;
+  }
+
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    margin-top: 0.2rem;
+  }
+</style>
 
 <div id="react-app"></div>
 
@@ -25,9 +43,9 @@
     );
   };
 
-  const SearchResult = ({ id, image }) => {
+  const SearchResult = ({ id, name, image }) => {
     return e(
-      "span",
+      "li",
       {},
       e("img", {
         src:
@@ -35,16 +53,57 @@
           image?.original ||
           "https://via.placeholder.com/200x300",
         title: id,
-      })
+      }),
+      e("span", {}, name),
+      e(Watch, { id })
     );
   };
 
   const SearchResults = ({ results }) => {
     return e(
-      "div",
+      "ol",
       {},
       (results || []).map((result) =>
         e(SearchResult, { key: result.id, ...result })
+      )
+    );
+  };
+
+  const Watch = ({ id }) => {
+    return e(
+      "span",
+      {},
+      " ",
+      e(
+        "a",
+        {
+          href: "#",
+          onClick: (event) => {
+            event.preventDefault();
+            const date = prompt("When did you start watching?");
+            console.log("start watching", id, date);
+            const data = JSON.parse(localStorage.getItem("data")) || {};
+            data.started = [...(data.started || []), { id, date }];
+            localStorage.setItem("data", JSON.stringify(data));
+          },
+        },
+        "Start"
+      ),
+      " ",
+      e(
+        "a",
+        {
+          href: "#",
+          onClick: (event) => {
+            event.preventDefault();
+            const date = prompt("When did you end watching?");
+            console.log("end watching", id, date);
+            const data = JSON.parse(localStorage.getItem("data")) || {};
+            data.ended = [...(data.ended || []), { id, date }];
+            localStorage.setItem("data", JSON.stringify(data));
+          },
+        },
+        "End"
       )
     );
   };
