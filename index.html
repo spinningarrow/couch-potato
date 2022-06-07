@@ -106,8 +106,8 @@
             event.preventDefault()
             const startDate = event.target.started.value
             const endDate = event.target.ended.value
-            api.startWatching(id, undefined, startDate)
-            api.endWatching(id, undefined, endDate)
+            if (startDate) api.startWatching(id, undefined, startDate)
+            if (endDate) api.endWatching(id, undefined, endDate)
           }
         },
         e(
