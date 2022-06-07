@@ -20,14 +20,8 @@
 
 <div id="react-app"></div>
 
-<script
-  src="https://unpkg.com/react@18/umd/react.development.js"
-  crossorigin
-></script>
-<script
-  src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
-  crossorigin
-></script>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 
 <script type="module">
   import * as api from "./api.mjs";
@@ -106,16 +100,44 @@
         "End"
       ),
       e(
-        "label",
-        {},
-        "Started",
-        e(
-          "input",
-          {
-            type: "date"
+        "form",
+        {
+          onSubmit: (event) => {
+            event.preventDefault()
           }
+        },
+        e(
+          "label",
+          {},
+          "Started",
+          e(
+            "input",
+            {
+              type: "date",
+              name: "started"
+            }
+          )
+        ),
+        e(
+          "label",
+          {},
+          "Ended",
+          e(
+            "input",
+            {
+              type: "date",
+              name: "ended"
+            }
+          )
+        ),
+        e(
+          "button",
+          {
+            type: "Submit"
+          },
+          "Save"
         )
-      )
+      ),
     );
   };
 
