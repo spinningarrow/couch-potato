@@ -10,8 +10,22 @@ export const getSeasons = async (showId) => {
   console.log("getting seasons for show", showId);
 };
 
-export const addShow = async (showId, seasonId) => {};
+export const addShow = async (showId, seasonId) => { };
 
-export const startWatching = async (showId, seasonId, startDate) => {};
+export const startWatching = async (showId, seasonId, date) => {
+  const data = JSON.parse(localStorage.getItem("data")) || {};
+  data.started = {
+    ...data.started,
+    [id]: date
+  }
+  localStorage.setItem("data", JSON.stringify(data));
+};
 
-export const endWatching = async (showId, seasonId, endDate) => {};
+export const endWatching = async (showId, seasonId, date) => {
+  const data = JSON.parse(localStorage.getItem("data")) || {};
+  data.ended = {
+    ...data.ended,
+    [id]: date
+  }
+  localStorage.setItem("data", JSON.stringify(data));
+};

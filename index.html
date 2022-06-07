@@ -104,6 +104,10 @@
         {
           onSubmit: (event) => {
             event.preventDefault()
+            const startDate = event.target.started.value
+            const endDate = event.target.ended.value
+            api.startWatching(id, undefined, startDate)
+            api.endWatching(id, undefined, endDate)
           }
         },
         e(
