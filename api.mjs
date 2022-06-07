@@ -16,7 +16,7 @@ export const startWatching = async (showId, seasonId, date) => {
   const data = JSON.parse(localStorage.getItem("data")) || {};
   data.started = {
     ...data.started,
-    [id]: date
+    [showId]: date
   }
   localStorage.setItem("data", JSON.stringify(data));
 };
@@ -25,7 +25,7 @@ export const endWatching = async (showId, seasonId, date) => {
   const data = JSON.parse(localStorage.getItem("data")) || {};
   data.ended = {
     ...data.ended,
-    [id]: date
+    [showId]: date
   }
   localStorage.setItem("data", JSON.stringify(data));
 };
