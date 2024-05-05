@@ -184,22 +184,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
 
-<script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js'
-
-  // If you enabled Analytics in your project, add the Firebase SDK for Google Analytics
-  import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js'
-
-  // Add Firebase products that you want to use
-  import { getAuth } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js'
-  import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js'
-
-  // import firebase from "firebase/compat/app";
-// import "firebase/compat/auth";
-</script>
 <script>
-
-  const ui = new firebaseui.auth.AuthUI(firebase.auth());
+  const firebaseApp = firebase.initializeApp({ /* Firebase config */ });
+  const ui = new firebaseui.auth.AuthUI(firebaseApp.auth());
   ui.start('#firebaseui-auth-container', {
   signInOptions: [
     // List of OAuth providers supported.
