@@ -1,0 +1,6 @@
+{:deps {org.clojure/clojurescript {:mvn/version "1.11.54"}
+        reagent/reagent {:mvn/version "1.2.0"}
+        cljsjs/react {:mvn/version "18.2.0-1"}
+        cljsjs/react-dom {:mvn/version "18.2.0-1"}
+        org.clojure/core.async {:mvn/version "1.6.681"}}
+ :paths ["src"]}
