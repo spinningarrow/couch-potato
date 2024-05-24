@@ -2,9 +2,9 @@
 
 ## Dev
 
-    clj -M --main cljs.main --compile hello-world.core --repl
+    make dev
 
 ## Production Build
 
-    clj -M --main cljs.main --optimizations advanced --compile hello-world.core
+    make build
 
