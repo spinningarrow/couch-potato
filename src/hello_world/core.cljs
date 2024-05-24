@@ -1,5 +1,6 @@
 (ns hello-world.core
   (:require [hello-world.api :as api]
+            [hello-world.state :as state]
             [reagent.dom :as rdom]
             [reagent.core :as r]
             [cljs.core.async :refer [go <!]]
@@ -7,19 +8,15 @@
 
 (def app (.querySelector js/document "#app"))
 
-(def results (r/atom [{:name "Sherlock" :id 335}
-                      {:name "Breaking Bad" :id 169 :seasons [{:number 1 :summary "Season 1"} {:number 2 :summary "Season 2"}]}]))
-(def query (r/atom ""))
-
 (defn search-form []
   (let [handle-search (fn [event]
                         (.preventDefault event)
-                        (go (reset! results (into [] (map :show (<! (api/tvmaze-search @query)))))))]
+                        (go (reset! state/results (into [] (map :show (<! (api/tvmaze-search @state/query)))))))]
     [:form {:on-submit handle-search}
      [:input {:type "text"
               :id "search-input"
-              :value @query
-              :on-change #(reset! query (-> % .-target .-value))}]
+              :value @state/query
+              :on-change #(reset! state/query (-> % .-target .-value))}]
      [:button {:type "submit"} "Search"]]))
 
 (defn search-result-seasons [seasons]
@@ -34,9 +31,9 @@
   (let [image-url (get-in image [:medium])
         handle-load-seasons (fn [event]
                               (.preventDefault event)
-                              (let [show-index (.findIndex (clj->js @results) (fn [show] (= (aget show "id") id)))]
+                              (let [show-index (.findIndex (clj->js @state/results) (fn [show] (= (aget show "id") id)))]
                                 (.log js/console "showindex is" show-index)
-                                (and (> show-index -1) (go (swap! results assoc-in [show-index :seasons] (<! (api/tvmaze-show-seasons id)))))))]
+                                (and (> show-index -1) (go (swap! state/results assoc-in [show-index :seasons] (<! (api/tvmaze-show-seasons id)))))))]
     [:div
      (and image-url [:img {:src image-url :style {:height "5rem"}}])
      [:span show-name]
@@ -63,7 +60,7 @@
    [:h1 "Couch Potato"]
    [:h2 "Search"]
    [search-form]
-   [search-results @results]
+   [search-results @state/results]
    [:h2 "My Shows"]
    [my-shows [{:name "Sherlock" :id 335 :date-ended "2017-01-01"}
               {:name "Breaking Bad" :id 169 :date-ended "2013-01-01"}]]])
