@@ -1,5 +1,9 @@
 # Couch Potato 🥔
 
+## Setup
+
+    brew install clojure
+
 ## Dev
 
     make dev
