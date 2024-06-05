@@ -6,6 +6,14 @@
             [cljs.core.async :refer [go <!]]
             [cljs.core.async.interop :refer-macros [<p!]]))
 
+(defn nav []
+  [:nav {:class "main-nav"}
+   [:ol
+     [:li
+      [:a {:href "#watchlist"} "Watchlist"]]
+     [:li
+      [:a {:href "#search"} "Search"]]]])
+
 (defn search-form []
   (let [handle-search (fn [event]
                         (.preventDefault event)
@@ -32,14 +40,14 @@
                               (let [show-index (.findIndex (clj->js @state/results) (fn [show] (= (aget show "id") id)))]
                                 (.log js/console "showindex is" show-index)
                                 (and (> show-index -1) (go (swap! state/results assoc-in [show-index :seasons] (<! (api/tvmaze-show-seasons id)))))))]
-    [:div
+    [:li
      (and image-url [:img {:src image-url :style {:height "5rem"}}])
      [:span show-name]
      (and (empty? seasons) [:button {:on-click handle-load-seasons} "Load Seasons"])
      (or (empty? seasons) (search-result-seasons seasons))]))
 
 (defn search-results [shows]
-  [:div
+  [:ol {:class "search-results"}
    (for [show shows]
      [search-result show])])
 
@@ -56,12 +64,15 @@
 (defn couch-potato []
   [:div
    [:h1 "Couch Potato"]
-   [:h2 "Search"]
-   [search-form]
-   [search-results @state/results]
-   [:h2 "My Shows"]
-   [my-shows [{:name "Sherlock" :id 335 :date-ended "2017-01-01"}
-              {:name "Breaking Bad" :id 169 :date-ended "2013-01-01"}]]])
+   [nav]
+   [:div {:id "search" :class "page"}
+     [:h2 "Search"]
+     [search-form]
+     [search-results @state/results]]
+   [:div {:id "watchlist" :class "page"}
+     [:h2 "My Shows"]
+     [my-shows [{:name "Sherlock" :id 335 :date-ended "2017-01-01"}
+                {:name "Breaking Bad" :id 169 :date-ended "2013-01-01"}]]]])
 
 (defn main []
   (rdom/render
