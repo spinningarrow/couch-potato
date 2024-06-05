@@ -25,26 +25,21 @@
               :on-change #(reset! state/query (-> % .-target .-value))}]
      [:button {:type "submit"} "Search"]]))
 
-(defn search-result-seasons [seasons]
-  (for [season seasons]
-    (let [season-number (get-in season [:number])
-          summary (get-in season [:summary])]
-      [:div
-       [:strong season-number]
-       [:span summary]])))
-
 (defn search-result [{show-name :name id :id image :image seasons :seasons}]
   (let [image-url (get-in image [:medium])
         handle-load-seasons (fn [event]
                               (.preventDefault event)
                               (let [show-index (.findIndex (clj->js @state/results) (fn [show] (= (aget show "id") id)))]
                                 (.log js/console "showindex is" show-index)
-                                (and (> show-index -1) (go (swap! state/results assoc-in [show-index :seasons] (<! (api/tvmaze-show-seasons id)))))))]
+                                (and (> show-index -1) (go (swap! state/results assoc-in [show-index :seasons] (<! (api/tvmaze-show-seasons id)))))))
+        watchlist-show {:id id :name show-name :image image-url :date-ended (.toISOString (js/Date.))}
+        handle-add-show (fn [event]
+                          (.preventDefault event)
+                          (.log js/console "add show" (clj->js watchlist-show)))]
     [:li
      (and image-url [:img {:src image-url :style {:height "5rem"}}])
      [:span show-name]
-     (and (empty? seasons) [:button {:on-click handle-load-seasons} "Load Seasons"])
-     (or (empty? seasons) (search-result-seasons seasons))]))
+     [:button {:on-click handle-add-show} "Add Show"]]))
 
 (defn search-results [shows]
   [:ol {:class "search-results"}
