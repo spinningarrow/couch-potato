@@ -6,8 +6,6 @@
             [cljs.core.async :refer [go <!]]
             [cljs.core.async.interop :refer-macros [<p!]]))
 
-(def app (.querySelector js/document "#app"))
-
 (defn search-form []
   (let [handle-search (fn [event]
                         (.preventDefault event)
