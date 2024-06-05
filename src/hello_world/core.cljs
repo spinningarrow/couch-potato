@@ -35,7 +35,8 @@
         watchlist-show {:id id :name show-name :image image-url :date-ended (.toISOString (js/Date.))}
         handle-add-show (fn [event]
                           (.preventDefault event)
-                          (.log js/console "add show" (clj->js watchlist-show)))]
+                          (.log js/console "add show" (clj->js watchlist-show))
+                          (swap! state/watchlist conj watchlist-show))]
     [:li
      (and image-url [:img {:src image-url :style {:height "5rem"}}])
      [:span show-name]
@@ -54,7 +55,7 @@
 (defn my-shows [shows]
   [:div
    (for [show shows]
-     [show-item show])])
+     [show-item {:key (show :id)} show])])
 
 (defn couch-potato []
   [:div
@@ -66,8 +67,7 @@
      [search-results @state/results]]
    [:div {:id "watchlist" :class "page"}
      [:h2 "My Shows"]
-     [my-shows [{:name "Sherlock" :id 335 :date-ended "2017-01-01"}
-                {:name "Breaking Bad" :id 169 :date-ended "2013-01-01"}]]]])
+     [my-shows @state/watchlist]]])
 
 (defn main []
   (rdom/render
