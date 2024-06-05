@@ -53,9 +53,9 @@
    [:p date-ended]])
 
 (defn my-shows [shows]
-  [:div
+  [:ol
    (for [show shows]
-     [show-item {:key (show :id)} show])])
+     [:li {:key (show :id)} [show-item show]])])
 
 (defn couch-potato []
   [:div
